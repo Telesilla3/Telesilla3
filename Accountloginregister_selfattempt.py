@@ -56,20 +56,22 @@ def check_password(pwn):
         
 counter = 1
 username_check = check_account("Good day. Please input your username: ")
-while not username_check:
+counter1 = 1 
+while not username_check and counter1 <=5 :
     print("Please try again.")
     print(acc_pw)
     Register_bool = valid_input("Do you want to register your account? (Please input Yes or No): ")
     if Register_bool:
         new_username = register_account("Please input your username: ")
+        if new_username not in registered_account:
+            break
         if new_username in registered_account:
-            continue
-        new_password = register_password("Please input your password twice: ")
-        acc_pw[new_username] = new_password
-        print("Successfully Registered. Please try and log in again.")
-        print(acc_pw)
-        print(registered_account)
-        break 
+            new_password = register_password("Please input your password twice: ")
+            acc_pw[new_username] = new_password
+            print("Successfully Registered. Please try and log in again.")
+            print(acc_pw)
+            print(registered_account)
+            break 
     else:
         print("See you! Have a good day!")   
         break 
@@ -97,6 +99,7 @@ else:
 print(acc_pw)
 
     
+
 
 
 
