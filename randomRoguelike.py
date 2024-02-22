@@ -6,13 +6,15 @@ player_name = ""
 player_status = { 
 
     "HP" : 89,
+    "Stamina" : 81
 
 }
 
 player_class = {}
 player_inventory = { 
-    "Throwing Knife" : 2, 
-    "Health Potion" : 1,
+    "throwing knife" : 2, 
+    "health potion" : 1,
+    "stamina potion" : 1,
     }
 
 
@@ -64,9 +66,8 @@ def dice_roll(dice):
 
 def roll_the_dice(diceroll):
     while True:
-        diceroll = random.randint(0, 11)
-        dice_result = dice_roll(diceroll)
-        dice_result += 1
+        diceroll = random.randint(1, 12)
+        dice_result = int(dice_roll(diceroll))
         for seconds in range(3,0,-1):
             print(seconds)
             time.sleep(1)
@@ -115,22 +116,55 @@ def displayInventory(dispinvent):
             print(str(v) + ' ' + str(k))
     else:
         pass
-def use_hppotion(potion):
-    potion = input("Type the hp potion you wish to use: ")
-    if potion.lower() == "health potion":
-        if player_status["HP"] == 100:
-            print("HP Full. cannot use potion.")
-        elif player_status["HP"] <= 99:
-            player_status["HP"] = int(player_status.get("HP")) + 20
-            if player_status["HP"] > 100:
-                player_status["HP"] = 100
-            print(f"Successfully healed. {player_status}")
-            if player_inventory["Health Potion"] == 1:
-                del player_inventory["Health Potion"]
+def use_potion(potion):
+    while True:
+        potion = input("Type the potion you wish to use: ")
+        if potion == "":
+            retry_potion = valid_input("No such thing as a nothing potion. Do you wish to retry?")
+            if retry_potion == True:
+                continue
             else:
-                player_inventory["Health Potion"] = int(player_inventory.get("Health Potion")) - 1
-    else:
-        print("No such potion")
+                break
+        elif potion.lower() not in player_inventory:
+            retry_potion = valid_input("Potion not in your inventory. Do you wish to use a potion? (Input yes or no): ")
+            if retry_potion == True:
+                continue
+            else:
+                break        
+        elif potion.lower() == "health potion":
+            if player_status["HP"] == 100:
+                print("HP Full. cannot use potion.")
+                break
+            elif player_status["HP"] <= 99:
+                player_status["HP"] += 20
+                if player_status["HP"] > 100:
+                    player_status["HP"] = 100
+                    print(f"Successfully healed. {player_status}")
+                if player_inventory["health potion"] == 1:
+                    del player_inventory["health potion"]
+                    break
+                else:
+                    player_inventory["health potion"] -= 1
+                    break
+        elif potion.lower()== "stamina potion":
+            if player_status["Stamina"] == 100:
+                print("Stamina Full. cannot use potion.")
+                break
+            elif player_status["Stamina"] <= 99:
+                player_status["Stamina"] += 20
+                if player_status["Stamina"] > 100:
+                    player_status["Stamina"] = 100
+                    print(f"Stamina successfully recovered. {player_status}")
+                if player_inventory["stamina potion"] == 1:
+                    del player_inventory["stamina potion"]
+                    break
+                elif "stamina potion" not in player_inventory:
+                    print("You don't have any stamina potions.")
+                    break
+                else:
+                    player_inventory["stamina potion"] -= 1
+                    break
+
 
 
 #def player_combat(playerturn, opponentturn):
@@ -158,35 +192,73 @@ checkstatus("Check status? (Yes or No): ")
 displayInventory("Check inventory? (Yes or No): ")
 print("Note: Player weapon shows durability, not amount.")
 
-diceroll1 = roll_the_dice("")
-print(f"The die speaks: {diceroll1}.")
+print("You begin your adventure, towards the dark forest. . . .")
 
 for i in range(3,0,-1):
     time.sleep(1)
+    
+
 
 print("You walk deep into the woods with only the light of the moon, filtered by the leaves, guiding your path.")
 print("From a distance, you notice an Orc clad in chainmail armor, guarding what seems to be a chest of treasure.")
 
 potopp = valid_input("Do you wish to use your potion?: ")
 if potopp == True:
-    use_hppotion("Type the name of the potion that you want to use.: ")
+    use_potion("Type the name of the potion that you want to use.: ")
+    print(player_inventory)
     
 else:
     pass
 
-Orc1 = {"HP" : 50} #First enemy encounter status
-
+escape1 = False
 combat1 = valid_input("Do you wish to engage in combat?: ")
 if combat1 == True:
     checkstatus("Check your status before combat?: ")
-    
 elif combat1 == False:
     leave1 = valid_input("Do you wish to take a different path? (get away from the encounter?): ")
     if leave1 == True:
-        print("You attempt to leave without alerting the Orc. (mandatory dice roll)")
-        droll1 = roll_the_dice("")
-        print(droll1)
-        if droll1 >= 5:
-            print("You successfully leave the ")
+        pass
+print("You attempt to leave without alerting the Orc. (mandatory dice roll)")
+droll1 = roll_the_dice("")
+print(f"The die speaks.: {droll1}")
+if droll1 >= 7:
+    print("You successfully leave the encounter.")
+    escape1 = True
+
+else:
+    print("You attempt to leave, but due to your lack of wariness, you step on a twig.")
+    print("The twig alerts the Orc. Leaving you no choice but to engage.")
+    checkstatus("Check your status before combat?: ")
+    escape1 = False
+
+
+
+
+Orc1 = {"HP" : 50} #First enemy encounter status
+if escape1 == True:
+    pass
+else:
+    print("The Orc swings its sword vertically, but you see this and you attempt to dodge.")
+    droll2 = roll_the_dice("")
+    print(f"The die speaks. {droll2}")
+    if droll2 >= 6:
+        print("You evaded the orc's attack. You brush yourself off and attempt to retaliate.")
+        pass
+    elif droll2 <= 5:
+        print("The blade cuts deep into your shoulder, leaving a significantly large wound.")
+        print("(You take 20 damage.)")
+        player_status["HP"] -= 20
+        print(player_status)
+        pass
+    displayInventory("")
+if escape1 == True:
+    pass
+else: 
+    playertrn1 = valid_input("Use your weapon to retaliate? (Weapon assigned by class. Input Yes or No.): ")
+    if playertrn1 == True:
+        pass
+    else:
+        pass
+
     
 
