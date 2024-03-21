@@ -266,8 +266,7 @@ else:
     pass
 
 escape1 = False
-stscheck1 = valid_input("Do
-you wish to engage in combat?: ")
+stscheck1 = valid_input("Do you wish to engage in combat?: ")
 if stscheck1 == True:
     checkstatus("Check your status before combat?: ")
     pass
